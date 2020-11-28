@@ -4,14 +4,12 @@ services:
 
   fabricsdkrest:
     container_name: fabricsdkrest
-    #image: martinmutua/breakroom
+    #image:
     build:
       context: . 
     restart: always
     environment:
       #NODE_ENV: production
-    #depends_on:
-      #- postgres
     ports:
       - '3000:3000'
     env_file: 
