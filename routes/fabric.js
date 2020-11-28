@@ -26,7 +26,7 @@ router.put('/update-meeting', updateEvaluationMeeting);
 router.get('/meetings', getAllEvaluationMeeting);
 
 /* GET an evaluation meeting */
-router.get('/meeting',getEvaluationMeeting )
+router.get('/meeting',getEvaluationMeeting)
 
 
 module.exports = router;

@@ -36,10 +36,21 @@ async function connectionGateway() {
 connectionGateway();
 
 // Build a network instance based on the channel where the smart contract is deployed
-const network = await gateway.getNetwork(channelName);
+const network = async function() {
+    return await gateway.getNetwork(channelName);
+};
 
 // Get the contract from the network.
-const contract = network.getContract(chaincodeName);
+const contract = async function() {
+    return network.getContract(chaincodeName);
+}
+
+// build an in memory object with the network configuration (also known as a connection profile)
+const ccp = buildCCPOrg1();
+
+// build an instance of the fabric ca services client based on
+// the information in the network configuration
+const caClient = buildCAClient(FabricCAServices, ccp, 'ca.org1.example.com');
 
 // pre-requisites:
 // - fabric-sample two organization test-network setup with two peers, ordering service,
@@ -91,13 +102,6 @@ const contract = network.getContract(chaincodeName);
 
 async function enrolladmin(req, res, next) {
     try {
-        // build an in memory object with the network configuration (also known as a connection profile)
-		const ccp = buildCCPOrg1();
-
-		// build an instance of the fabric ca services client based on
-		// the information in the network configuration
-		const caClient = buildCAClient(FabricCAServices, ccp, 'ca.org1.example.com');
-
 		// setup the wallet to hold the credentials of the application user
 		const wallet = await buildWallet(Wallets, walletPath);
 
@@ -113,13 +117,6 @@ async function enrolladmin(req, res, next) {
 
 async function enrolluser(req, res, next) {
     try {
-        // build an in memory object with the network configuration (also known as a connection profile)
-		const ccp = buildCCPOrg1();
-
-		// build an instance of the fabric ca services client based on
-		// the information in the network configuration
-		const caClient = buildCAClient(FabricCAServices, ccp, 'ca.org1.example.com');
-
 		// setup the wallet to hold the credentials of the application user
 		const wallet = await buildWallet(Wallets, walletPath);
 
@@ -162,7 +159,7 @@ async function createEvaluationMeeting(req, res, next) {
 
 async function getEvaluationMeeting(req, res, next) {
     const {} = req.body;
-    console.log('\n--> Evaluate Transaction: ReadAsset, function returns an asset with a given assetID');
+    console.log('\n--> Evaluate Transaction: ReadEvaluationMeeting, function returns an evaluation meeting with a given evaluation-meetingID');
     result = await contract.evaluateTransaction('ReadAsset', 'asset13');
     console.log(`*** Result: ${prettyJSONString(result.toString())}`);
 }
@@ -171,7 +168,7 @@ async function getAllEvaluationMeeting(req, res, next) {
     const {} = req.body;
     // Let's try a query type operation (function).
     // This will be sent to just one peer and the results will be shown.
-    console.log('\n--> Evaluate Transaction: GetAllEvaluationMeeting, function returns all the current assets on the ledger');
+    console.log('\n--> Evaluate Transaction: GetAllEvaluationMeeting, function returns all the current meetings on the ledger');
     let result = await contract.evaluateTransaction('GetAllEvaluationMeeting');
     console.log(`*** Result: ${prettyJSONString(result.toString())}`);
 }
@@ -185,7 +182,7 @@ async function updateEvaluationMeeting(req, res, next) {
 
 async function evaluationMeetingExists() {
     const {} = req.body;
-    console.log('\n--> Evaluate Transaction: EvaluationMeetingExists, function returns an asset with a given assetID');
+    console.log('\n--> Evaluate Transaction: EvaluationMeetingExists, function returns an evaluation meeting with a given evaluation-meetingID');
     result = await contract.evaluateTransaction('EvaluationMeetingExists');
     console.log(`*** Result: ${prettyJSONString(result.toString())}`);
 }
