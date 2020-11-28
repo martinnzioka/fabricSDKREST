@@ -1,11 +1,32 @@
 const express = require('express');
-const {} = require('../fabricsdk/fabric');
+const {
+  enrolluser,
+  createEvaluationMeeting, 
+  updateEvaluationMeeting, 
+  getAllEvaluationMeeting,
+  getEvaluationMeeting
+} = require('../fabricsdk/fabric');
 
 const router = express.Router();
 
-/* GET users listing. */
 router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+  res.send('REST API is running.');
 });
+
+/* POST  enroll new user. */
+router.post('/enroll-user', enrolluser);
+
+/* POST  create a new evaluation meeting. */
+router.post('/new-meeting', createEvaluationMeeting);
+
+/* PUT  update an evaluation meeting. */
+router.put('/update-meeting', updateEvaluationMeeting);
+
+/* GET all evaluation meeting. */
+router.get('/meetings', getAllEvaluationMeeting);
+
+/* GET an evaluation meeting */
+router.get('/meeting',getEvaluationMeeting )
+
 
 module.exports = router;
